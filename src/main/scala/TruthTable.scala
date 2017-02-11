@@ -6,8 +6,10 @@ import PropositionSyntax._
   * Created by greg.temchenko on 2/8/17.
   */
 object TruthTable {
-  def main(args: Array[String]):Int = {
-    val expressionStr = "( ((p1) v (p2)) v (p3) )"
+
+  def main(args: Array[String]) = {
+//    val expressionStr = "( ((p1) ^ (p2)) v ((p1) ^ (p2)) )"
+    val expressionStr = "( (~(p1)) v (p2) )"
 
     // parse the expression
     val matchedOption = parse(expressionStr)
@@ -17,11 +19,28 @@ object TruthTable {
       val syntaxTree = matchedOption.get
 
       val varsSet = getVars(syntaxTree)
-      println("vars:")
-      println(varsSet)
-      0
-    } else 1
+      val varsList = varsSet.toList
+      for (pVar <- varsList) {
+        print(f"${pVar.varName}%5s") // TODO use smarter dynamic padding
+      }
+      print("   *")
+      println()
+
+      val valuesRows = generateVariablesValues(varsSet)
+      for (row <- valuesRows) {
+        for (pVar <- varsList) {
+          val value = getBoolString(row(pVar))
+          print(f"$value%5s")
+        }
+        val value = PropositionEvaluator.evaluate(syntaxTree, row)
+        val valueStr = getBoolString(value)
+        print(f"$valueStr%5s")
+        println()
+      }
+    }
   }
+
+  // helper functions
 
   def parse(expressionStr: String):Option[Proposition] = {
     val o = new PropositionalLogicParser
@@ -48,7 +67,7 @@ object TruthTable {
     }
   }
 
-  def generateTruthTableValues(vars: Set[PropositionVar]) : Stream[Map[PropositionVar,Boolean]] = {
+  def generateVariablesValues(vars: Set[PropositionVar]) : Stream[Map[PropositionVar,Boolean]] = {
     def loop(row: Int): Stream[ Map[PropositionVar,Boolean] ] = {
       val m = (for ((pVar, col) <- vars.zipWithIndex) yield {
         val streak = Math.floor( row / scala.math.pow(2, col) )
@@ -64,6 +83,8 @@ object TruthTable {
 
     loop(0)
   }
+
+  def getBoolString(value: Boolean) = if (value) "T" else "F"
 
 }
 

@@ -49,7 +49,7 @@ class TruthTableSpec extends PropSpec with TableDrivenPropertyChecks with Matche
 
   property("Generator works correctly") {
     forAll(testVarsGenerators) { case (vars, expectedTable) =>
-      val lazyTable = TruthTable.generateTruthTableValues(vars)
+      val lazyTable = TruthTable.generateVariablesValues(vars)
       val table = lazyTable.take(20)
 
       table.size should be(4)
