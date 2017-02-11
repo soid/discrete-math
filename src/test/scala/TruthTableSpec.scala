@@ -1,5 +1,6 @@
 import PropositionSyntax.{Proposition, PropositionVar}
 import org.scalatest.prop.TableDrivenPropertyChecks
+import org.scalatest.prop.Tables.Table
 import org.scalatest.{FlatSpec, Matchers, PropSpec}
 
 /**
@@ -31,6 +32,29 @@ class TruthTableSpec extends PropSpec with TableDrivenPropertyChecks with Matche
         val varsSet = TruthTable.getVars(syntaxTree)
         varsSet should be (expectedVariables)
       }
+    }
+  }
+
+  val testVarsGenerators = Table(
+    ("Vars Set", "Expected Table"),
+
+    (Set(PropositionVar("p1"), PropositionVar("p2")), Stream(
+      Map(PropositionVar("p1") -> true, PropositionVar("p2") -> true),
+      Map(PropositionVar("p1") -> false, PropositionVar("p2") -> true),
+      Map(PropositionVar("p1") -> true, PropositionVar("p2") -> false),
+      Map(PropositionVar("p1") -> false, PropositionVar("p2") -> false)
+    ))
+
+  )
+
+  property("Generator works correctly") {
+    forAll(testVarsGenerators) { case (vars, expectedTable) =>
+      val lazyTable = TruthTable.generateTruthTableValues(vars)
+      val table = lazyTable.take(20)
+
+      table.size should be(4)
+      table should be(expectedTable)
+      // println( table )
     }
   }
 

@@ -48,4 +48,34 @@ object TruthTable {
     }
   }
 
+  def generateTruthTableValues(vars: Set[PropositionVar]) : Stream[Map[PropositionVar,Boolean]] = {
+    def loop(row: Int): Stream[ Map[PropositionVar,Boolean] ] = {
+      val m = (for ((pVar, col) <- vars.zipWithIndex) yield {
+        val streak = Math.floor( row / scala.math.pow(2, col) )
+        val value = streak % 2 == 0
+
+        pVar -> value
+      }).toMap
+
+      // maximum number of elements is 2^vars.size
+      if (row < scala.math.pow(2, vars.size)-1) m #:: loop(row + 1)
+      else m #:: Stream.empty
+    }
+
+    loop(0)
+  }
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
