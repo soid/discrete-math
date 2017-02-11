@@ -28,20 +28,21 @@ If 𝛗 and 𝛙 are well-formed formulas, so are (𝛗 ∧ 𝛙), (𝛗 ∨ �
 explanation.)
 
 E.g. If the proposition is ¬( p → (q ∨ r)), your input string would be (~((p0)>((p1)v(p2))))
+
 (Trust me, as ugly as this looks it will make your parsing a lot easier.)
 
 The output for this should be
 
 ```
 p0 p1 p2 *
-T T T F
-T T F F
-T F T F
-T F F T
-F T T F
-F T F F
-F F T F
-F F F F
+ T  T  T F
+ T  T  F F
+ T  F  T F
+ T  F  F T
+ F  T  T F
+ F  T  F F
+ F  F  T F
+ F  F  F F
 ```
 
 Your program should be able to handle an arbitrary number of propositional variables. Do not use an “eval” type function , even if your language has one.
