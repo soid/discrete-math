@@ -1,7 +1,6 @@
 import PropositionParser.PropositionVar
 import org.scalatest.prop.TableDrivenPropertyChecks
-import org.scalatest.prop.Tables.Table
-import org.scalatest.{FlatSpec, Matchers, PropSpec}
+import org.scalatest.{Matchers, PropSpec}
 
 /**
   * Created by greg.temchenko on 2/10/17.
@@ -10,6 +9,11 @@ class TruthTableSpec extends PropSpec with TableDrivenPropertyChecks with Matche
 
   val testPropositions = Table(
     ( "Proposition", "Expected Variables Set" ),
+    ( "( ~(p1) )", Set(PropositionVar("p1")) ),
+    ( "( ~((p1) > (p2)) )", Set(PropositionVar("p1"), PropositionVar("p2")) ),
+    ( "( ~((p1) = (p2)) )", Set(PropositionVar("p1"), PropositionVar("p2")) ),
+    ( "( ~((p1) v (p2)) )", Set(PropositionVar("p1"), PropositionVar("p2")) ),
+    ( "( ~((p1) ^ (p2)) )", Set(PropositionVar("p1"), PropositionVar("p2")) ),
     ( "( ((p1) v (p2)) v (p3) )", Set(PropositionVar("p1"), PropositionVar("p2"), PropositionVar("p3")) ),
     ( "( ((p1) v (p2)) v ((p1) v (p3)) )", Set(PropositionVar("p1"), PropositionVar("p2"), PropositionVar("p3")) ),
 //    ( "( (p1) ^ (p2) v (p3) )", Set(PropositionVar("p1"), PropositionVar("p2"), PropositionVar("p3")) ),
@@ -25,25 +29,26 @@ class TruthTableSpec extends PropSpec with TableDrivenPropertyChecks with Matche
       val matchedOption = TruthTable.parse(proposition)
       assert(matchedOption.isDefined)
 
-      if (matchedOption.isDefined) {
-        // get all variables
-        val syntaxTree = matchedOption.get
+      // get all variables
+      val syntaxTree = matchedOption.get
 
-        val varsSet = TruthTable.getVars(syntaxTree)
-        varsSet should be (expectedVariables)
-      }
+      val varsSet = TruthTable.getVars(syntaxTree)
+      varsSet should be (expectedVariables)
     }
   }
 
   val testVarsGenerators = Table(
     ("Vars Set", "Expected Table"),
 
-    (Set(PropositionVar("p1"), PropositionVar("p2")), Stream(
-      Map(PropositionVar("p1") -> true, PropositionVar("p2") -> true),
-      Map(PropositionVar("p1") -> false, PropositionVar("p2") -> true),
-      Map(PropositionVar("p1") -> true, PropositionVar("p2") -> false),
-      Map(PropositionVar("p1") -> false, PropositionVar("p2") -> false)
-    ))
+    (
+      Set(PropositionVar("p1"), PropositionVar("p2")),
+      Stream(
+        Map(PropositionVar("p1") -> true, PropositionVar("p2") -> true),
+        Map(PropositionVar("p1") -> false, PropositionVar("p2") -> true),
+        Map(PropositionVar("p1") -> true, PropositionVar("p2") -> false),
+        Map(PropositionVar("p1") -> false, PropositionVar("p2") -> false)
+      )
+    )
 
   )
 
@@ -54,7 +59,23 @@ class TruthTableSpec extends PropSpec with TableDrivenPropertyChecks with Matche
 
       table.size should be(4)
       table should be(expectedTable)
-      // println( table )
+    }
+  }
+
+  property("Evaluator works correctly") {
+    forAll(testPropositions) { case (proposition, expectedVariables) =>
+      // parse the expression
+      val matchedOption = TruthTable.parse(proposition)
+      assert(matchedOption.isDefined)
+
+      // get all variables
+      val syntaxTree = matchedOption.get
+
+      val varsSet = TruthTable.getVars(syntaxTree)
+      val values = TruthTable.generateVariablesValues(varsSet)
+      val results = values.map(PropositionEvaluator.evaluate(syntaxTree, _))
+
+      results should contain (true) // only check that propositions are satisfiable
     }
   }
 

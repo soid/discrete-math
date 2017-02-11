@@ -73,6 +73,8 @@ object TruthTable {
       case OperatorOr(p1, p2) => vars ++ getVars(p1) ++ getVars(p2)
       case OperatorAnd(p1, p2) => vars ++ getVars(p1) ++ getVars(p2)
       case OperatorNot(prop) => vars ++ getVars(prop)
+      case OperatorImplication(p1, p2) => vars ++ getVars(p1) ++ getVars(p2)
+      case OperatorBiImplication(p1, p2) => vars ++ getVars(p1) ++ getVars(p2)
     }
   }
 

@@ -10,6 +10,11 @@ object PropositionEvaluator {
       case OperatorOr(prop1, prop2) => evaluate(prop1, values) || evaluate(prop2, values)
       case OperatorAnd(prop1, prop2) => evaluate(prop1, values) && evaluate(prop2, values)
       case OperatorNot(propNot) => ! evaluate(propNot, values)
+
+      case OperatorImplication(prop1, prop2) => evaluate(OperatorOr(OperatorNot(prop1), prop2), values)
+      case OperatorBiImplication(prop1, prop2) =>
+        evaluate(OperatorAnd(OperatorOr(OperatorNot(prop1), prop2), OperatorOr(OperatorNot(prop2), prop1)),
+          values)
     }
   }
 }

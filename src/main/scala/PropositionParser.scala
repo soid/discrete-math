@@ -18,6 +18,8 @@ object PropositionParser {
   case class OperatorOr(prop1: Proposition, prop2: Proposition) extends Proposition
   case class OperatorAnd(prop1: Proposition, prop2: Proposition) extends Proposition
   case class OperatorNot(prop: Proposition) extends Proposition
+  case class OperatorImplication(prop1: Proposition, prop2: Proposition) extends Proposition
+  case class OperatorBiImplication(prop1: Proposition, prop2: Proposition) extends Proposition
 }
 
 class PropositionParser extends RegexParsers {
@@ -31,8 +33,11 @@ class PropositionParser extends RegexParsers {
   def parenthesizedProposition = "(" ~> proposition <~ ")"
   def operatorOr: Parser[OperatorOr] = operand ~ "v" ~ operand ^^ { case a ~ v ~ b => OperatorOr(a, b) }
   def operatorAnd: Parser[OperatorAnd] = operand ~ "^" ~ operand ^^ { case a ~ v ~ b => OperatorAnd(a, b) }
+  def operatorImpl: Parser[OperatorImplication] = operand ~ ">" ~ operand ^^ { case a ~ v ~ b => OperatorImplication(a, b) }
+  def operatorBiImpl: Parser[OperatorBiImplication] = operand ~ "=" ~ operand ^^ { case a ~ v ~ b => OperatorBiImplication(a, b) }
   def operatorNot: Parser[OperatorNot] = "~" ~ operand ^^ { case "~" ~ pVar => OperatorNot(pVar) }
 
-  def proposition:Parser[Proposition] = operatorOr | operatorAnd | operatorNot | propositionalVar | parenthesizedVar
+  def proposition:Parser[Proposition] = operatorOr | operatorAnd | operatorImpl | operatorBiImpl |
+                                       operatorNot | propositionalVar | parenthesizedVar
 }
 
