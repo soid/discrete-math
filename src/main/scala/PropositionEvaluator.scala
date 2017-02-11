@@ -1,4 +1,4 @@
-import PropositionSyntax._
+import PropositionParser._
 
 /**
   * Created by greg.temchenko on 2/10/17.

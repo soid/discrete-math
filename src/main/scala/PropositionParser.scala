@@ -1,4 +1,4 @@
-import PropositionSyntax._
+import PropositionParser._
 
 import scala.util.parsing.combinator.RegexParsers
 
@@ -9,7 +9,21 @@ import scala.util.parsing.combinator.RegexParsers
   *  http://www.donroby.com/wp/scala/parsing-expressions-with-scala-parser-combinators-2/
   *  https://github.com/droby/expression-parser/blob/master/src/main/scala/com/donroby/parsing/ExpressionParsers.scala
   */
-class PropositionalLogicParser extends RegexParsers {
+object PropositionParser {
+
+  // syntax objects
+
+  sealed abstract class Proposition
+  case class PropositionVar(varName: String) extends Proposition
+  case class OperatorOr(prop1: Proposition, prop2: Proposition) extends Proposition
+  case class OperatorAnd(prop1: Proposition, prop2: Proposition) extends Proposition
+  case class OperatorNot(prop: Proposition) extends Proposition
+}
+
+class PropositionParser extends RegexParsers {
+
+  // parser
+
   def propositionalVar: Parser[PropositionVar] = "p[0-9]+".r  ^^ { x => PropositionVar(x.toString) }
   def parenthesizedVar = "(" ~> propositionalVar <~ ")"
   def operand = propositionalVar | parenthesizedProposition
@@ -21,3 +35,4 @@ class PropositionalLogicParser extends RegexParsers {
 
   def proposition:Parser[Proposition] = operatorOr | operatorAnd | operatorNot | propositionalVar | parenthesizedVar
 }
+

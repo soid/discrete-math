@@ -1,4 +1,4 @@
-import PropositionSyntax._
+import PropositionParser._
 
 /**
   * Truth Table program entry point.
@@ -20,9 +20,10 @@ object TruthTable {
     // parse the expression
     val matchedOption = parse(expressionStr)
 
-    val buf = new StringBuilder
-    buf.append("Truth-table for the proposition: " + expressionStr + "\n")
     if (matchedOption.isDefined) {
+      val buf = new StringBuilder
+      buf.append("Truth-table for the proposition: " + expressionStr + "\n")
+
       // get all variables
       val syntaxTree = matchedOption.get
 
@@ -31,7 +32,7 @@ object TruthTable {
       for (pVar <- varsList) {
         buf.append(f"${pVar.varName}%5s")
       }
-      buf.append("   *\n")
+      buf.append("    *\n")
 
       val valuesRows = generateVariablesValues(varsSet)
       for (row <- valuesRows) {
@@ -44,13 +45,14 @@ object TruthTable {
         buf.append(f"$valueStr%5s")
         buf.append("\n")
       }
+      buf.toString()
+    } else {
+      "Error Occurred"
     }
-
-    buf.toString()
   }
 
   def parse(expressionStr: String):Option[Proposition] = {
-    val o = new PropositionalLogicParser
+    val o = new PropositionParser
 
     val matchedOption = o.parse(o.parenthesizedProposition, expressionStr.replaceAll("\\s+", "")) match {
       case o.Success(matched,_) => Some(matched)

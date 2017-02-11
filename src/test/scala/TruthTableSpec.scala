@@ -1,4 +1,4 @@
-import PropositionSyntax.{Proposition, PropositionVar}
+import PropositionParser.PropositionVar
 import org.scalatest.prop.TableDrivenPropertyChecks
 import org.scalatest.prop.Tables.Table
 import org.scalatest.{FlatSpec, Matchers, PropSpec}
