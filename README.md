@@ -22,12 +22,12 @@ More specifically, the input will be a well-formed formula that adheres to the f
 
 (p0), (p1), (p2), … are all well-formed formulas.
 
-If 𝛗 and 𝛙 are well-formed formulas, so are   ,   ,   ,   ,  
+If 𝛗 and 𝛙 are well-formed formulas, so are (𝛗 ∧ 𝛙), (𝛗 ∨ 𝛙), (𝛗 → 𝛙), (𝛗 ↔ 𝛙), (¬𝛗) 
 
 (Look at the section Recursive Definitions and Structural Induction in your textbook for a more detailed
 explanation.)
 
-E.g. If the proposition is  pq r , your input string would be ~  p0   p1v p2
+E.g. If the proposition is ¬( p → (q ∨ r)), your input string would be (~((p0)>((p1)v(p2))))
 (Trust me, as ugly as this looks it will make your parsing a lot easier.)
 
 The output for this should be
@@ -44,8 +44,7 @@ F F T F
 F F F F
 ```
 
-Your program should be able to handle an arbitrary number of propositional variables. Do not use an “eval”
-type function , even if your language has one.
+Your program should be able to handle an arbitrary number of propositional variables. Do not use an “eval” type function , even if your language has one.
 
 
 ## Usage
@@ -56,7 +55,7 @@ Generating truth-table for a single proposition:
 sbt 'run "( (~(p1)) v (p2) )"'
 ```
 
-Generating truth-table for multiple proposition:
+Generating truth-tables for multiple propositions:
 ```
 sbt 'run "( p1 v (p2 ^ p3)  )"    "( (p1 v p2) ^ (p1 v p3) )"'
 ```
