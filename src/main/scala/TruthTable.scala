@@ -8,8 +8,7 @@ import PropositionSyntax._
 object TruthTable {
 
   def main(args: Array[String]) = {
-//    val expressionStr = "( ((p1) ^ (p2)) v ((p1) ^ (p2)) )"
-    val expressionStr = "( (~(p1)) v (p2) )"
+    val expressionStr = args(0)
 
     // parse the expression
     val matchedOption = parse(expressionStr)
