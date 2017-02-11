@@ -1,4 +1,5 @@
-import PropositionSyntax.{OperatorAnd, OperatorOr, Proposition, PropositionVar}
+import PropositionSyntax._
+
 import scala.util.parsing.combinator.RegexParsers
 
 /**
@@ -11,11 +12,12 @@ import scala.util.parsing.combinator.RegexParsers
 class PropositionalLogicParser extends RegexParsers {
   def propositionalVar: Parser[PropositionVar] = "p[0-9]+".r  ^^ { x => PropositionVar(x.toString) }
   def parenthesizedVar = "(" ~> propositionalVar <~ ")"
-  def operand = (propositionalVar | parenthesizedProposition)
+  def operand = propositionalVar | parenthesizedProposition
 
   def parenthesizedProposition = "(" ~> proposition <~ ")"
   def operatorOr: Parser[OperatorOr] = operand ~ "v" ~ operand ^^ { case a ~ v ~ b => OperatorOr(a, b) }
   def operatorAnd: Parser[OperatorAnd] = operand ~ "^" ~ operand ^^ { case a ~ v ~ b => OperatorAnd(a, b) }
+  def operatorNot: Parser[OperatorNot] = "~" ~ operand ^^ { case "~" ~ pVar => OperatorNot(pVar) }
 
-  def proposition:Parser[Proposition] = ( operatorOr | operatorAnd | propositionalVar | parenthesizedVar )
+  def proposition:Parser[Proposition] = operatorOr | operatorAnd | operatorNot | propositionalVar | parenthesizedVar
 }
