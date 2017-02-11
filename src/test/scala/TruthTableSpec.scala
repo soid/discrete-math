@@ -3,6 +3,8 @@ import org.scalatest.prop.TableDrivenPropertyChecks
 import org.scalatest.{Matchers, PropSpec}
 
 /**
+  * Tests.
+  *
   * Created by greg.temchenko on 2/10/17.
   */
 class TruthTableSpec extends PropSpec with TableDrivenPropertyChecks with Matchers {
@@ -26,13 +28,13 @@ class TruthTableSpec extends PropSpec with TableDrivenPropertyChecks with Matche
   property("Propositions should return correct set of variables") {
     forAll(testPropositions) { case (proposition, expectedVariables) =>
       // parse the expression
-      val matchedOption = TruthTable.parse(proposition)
+      val matchedOption = PropositionParser.parse(proposition)
       assert(matchedOption.isDefined)
 
       // get all variables
       val syntaxTree = matchedOption.get
 
-      val varsSet = TruthTable.getVars(syntaxTree)
+      val varsSet = PropositionUtils.getVariablesSet(syntaxTree)
       varsSet should be (expectedVariables)
     }
   }
@@ -54,7 +56,7 @@ class TruthTableSpec extends PropSpec with TableDrivenPropertyChecks with Matche
 
   property("Generator works correctly") {
     forAll(testVarsGenerators) { case (vars, expectedTable) =>
-      val lazyTable = TruthTable.generateVariablesValues(vars)
+      val lazyTable = PropositionUtils.generateVariablesValues(vars)
       val table = lazyTable.take(20)
 
       table.size should be(4)
@@ -65,14 +67,14 @@ class TruthTableSpec extends PropSpec with TableDrivenPropertyChecks with Matche
   property("Evaluator works correctly") {
     forAll(testPropositions) { case (proposition, expectedVariables) =>
       // parse the expression
-      val matchedOption = TruthTable.parse(proposition)
+      val matchedOption = PropositionParser.parse(proposition)
       assert(matchedOption.isDefined)
 
       // get all variables
       val syntaxTree = matchedOption.get
 
-      val varsSet = TruthTable.getVars(syntaxTree)
-      val values = TruthTable.generateVariablesValues(varsSet)
+      val varsSet = PropositionUtils.getVariablesSet(syntaxTree)
+      val values = PropositionUtils.generateVariablesValues(varsSet)
       val results = values.map(PropositionEvaluator.evaluate(syntaxTree, _))
 
       results should contain (true) // only check that propositions are satisfiable

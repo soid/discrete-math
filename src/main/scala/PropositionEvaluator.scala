@@ -1,6 +1,8 @@
 import PropositionParser._
 
 /**
+  * Evaluation of proposition given known values.
+  *
   * Created by greg.temchenko on 2/10/17.
   */
 object PropositionEvaluator {

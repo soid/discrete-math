@@ -8,6 +8,7 @@ import PropositionParser._
 object TruthTable {
 
   def main(args: Array[String]) = {
+    // evaluate every argument as a separate proposition
     for (expressionStr <- args) {
       val table = getTruthTableString(expressionStr)
       print(table)
@@ -18,7 +19,7 @@ object TruthTable {
 
   def getTruthTableString(expressionStr: String):String = {
     // parse the expression
-    val matchedOption = parse(expressionStr)
+    val matchedOption = PropositionParser.parse(expressionStr)
 
     if (matchedOption.isDefined) {
       val buf = new StringBuilder
@@ -27,14 +28,14 @@ object TruthTable {
       // get all variables
       val syntaxTree = matchedOption.get
 
-      val varsSet = getVars(syntaxTree)
+      val varsSet = PropositionUtils.getVariablesSet(syntaxTree)
       val varsList = varsSet.toList
       for (pVar <- varsList) {
         buf.append(f"${pVar.varName}%5s")
       }
       buf.append("    *\n")
 
-      val valuesRows = generateVariablesValues(varsSet)
+      val valuesRows = PropositionUtils.generateVariablesValues(varsSet)
       for (row <- valuesRows) {
         for (pVar <- varsList) {
           val value = getBoolString(row(pVar))
@@ -49,50 +50,6 @@ object TruthTable {
     } else {
       "Error Occurred"
     }
-  }
-
-  def parse(expressionStr: String):Option[Proposition] = {
-    val o = new PropositionParser
-
-    val matchedOption = o.parse(o.parenthesizedProposition, expressionStr.replaceAll("\\s+", "")) match {
-      case o.Success(matched,_) => Some(matched)
-      case fail: o.Failure =>
-        println("FAILURE: " + fail)
-        None
-      case err: o.Error =>
-        println("ERROR: " + err)
-        None
-    }
-
-    matchedOption.asInstanceOf[Option[Proposition]]
-  }
-
-  def getVars(sytaxTree:Proposition, vars: Set[PropositionVar] = Set()) : Set[PropositionVar] = {
-    sytaxTree match {
-      case prop: PropositionVar => vars + prop
-      case OperatorOr(p1, p2) => vars ++ getVars(p1) ++ getVars(p2)
-      case OperatorAnd(p1, p2) => vars ++ getVars(p1) ++ getVars(p2)
-      case OperatorNot(prop) => vars ++ getVars(prop)
-      case OperatorImplication(p1, p2) => vars ++ getVars(p1) ++ getVars(p2)
-      case OperatorBiImplication(p1, p2) => vars ++ getVars(p1) ++ getVars(p2)
-    }
-  }
-
-  def generateVariablesValues(vars: Set[PropositionVar]) : Stream[Map[PropositionVar,Boolean]] = {
-    def loop(row: Int): Stream[ Map[PropositionVar,Boolean] ] = {
-      val m = (for ((pVar, col) <- vars.zipWithIndex) yield {
-        val streak = Math.floor( row / scala.math.pow(2, col) )
-        val value = streak % 2 == 0
-
-        pVar -> value
-      }).toMap
-
-      // maximum number of elements is 2^vars.size
-      if (row < scala.math.pow(2, vars.size)-1) m #:: loop(row + 1)
-      else m #:: Stream.empty
-    }
-
-    loop(0)
   }
 
   def getBoolString(value: Boolean) = if (value) "T" else "F"
