@@ -8,11 +8,20 @@ import PropositionSyntax._
 object TruthTable {
 
   def main(args: Array[String]) = {
-    val expressionStr = args(0)
+    for (expressionStr <- args) {
+      val table = getTruthTableString(expressionStr)
+      print(table)
+    }
+  }
 
+  // helper functions
+
+  def getTruthTableString(expressionStr: String):String = {
     // parse the expression
     val matchedOption = parse(expressionStr)
 
+    val buf = new StringBuilder
+    buf.append("Truth-table for the proposition: " + expressionStr + "\n")
     if (matchedOption.isDefined) {
       // get all variables
       val syntaxTree = matchedOption.get
@@ -20,26 +29,25 @@ object TruthTable {
       val varsSet = getVars(syntaxTree)
       val varsList = varsSet.toList
       for (pVar <- varsList) {
-        print(f"${pVar.varName}%5s") // TODO use smarter dynamic padding
+        buf.append(f"${pVar.varName}%5s")
       }
-      print("   *")
-      println()
+      buf.append("   *\n")
 
       val valuesRows = generateVariablesValues(varsSet)
       for (row <- valuesRows) {
         for (pVar <- varsList) {
           val value = getBoolString(row(pVar))
-          print(f"$value%5s")
+          buf.append(f"$value%5s")
         }
         val value = PropositionEvaluator.evaluate(syntaxTree, row)
         val valueStr = getBoolString(value)
-        print(f"$valueStr%5s")
-        println()
+        buf.append(f"$valueStr%5s")
+        buf.append("\n")
       }
     }
-  }
 
-  // helper functions
+    buf.toString()
+  }
 
   def parse(expressionStr: String):Option[Proposition] = {
     val o = new PropositionalLogicParser

@@ -28,13 +28,19 @@ E.g. If the proposition is  pq r , your input string would 
 
 ## Usage
 
-Running:
+Generating truth-table for a single proposition:
 
 ```
-sbt "run ((~(p1))v(p2))"
+sbt 'run "( (~(p1)) v (p2) )"'
 ```
 
-Compilation:
+Generating truth-table for multiple proposition:
+```
+sbt 'run "( p1 v (p2 ^ p3)  )"    "( (p1 v p2) ^ (p1 v p3) )"'
+```
+
+
+Compilation only:
 
 ```
 sbt compile
