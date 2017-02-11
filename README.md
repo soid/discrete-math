@@ -1,6 +1,8 @@
 # Truth Table
 
-This is a study project made by Greg Temchenko for the Discrete Math class at Laney College by Derrick Smith. 
+This is a study project completed by Greg Temchenko for the Discrete Math class at Laney College by Derrick Smith.
+
+The project is written in Scala and requires sbt to run (http://www.scala-sbt.org). 
 
 ## Description
 
