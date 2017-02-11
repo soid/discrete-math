@@ -35,12 +35,15 @@ object TruthTable {
       }
       buf.append("    *\n")
 
+      // generate all possible values
       val valuesRows = PropositionUtils.generateVariablesValues(varsSet)
       for (row <- valuesRows) {
         for (pVar <- varsList) {
           val value = getBoolString(row(pVar))
           buf.append(f"$value%5s")
         }
+
+        // evaluate the proposition given generated values
         val value = PropositionEvaluator.evaluate(syntaxTree, row)
         val valueStr = getBoolString(value)
         buf.append(f"$valueStr%5s")
