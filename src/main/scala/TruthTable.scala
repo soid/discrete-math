@@ -29,7 +29,7 @@ object TruthTable {
       val syntaxTree = matchedOption.get
 
       val varsSet = PropositionUtils.getVariablesSet(syntaxTree)
-      val varsList = varsSet.toList
+      val varsList = varsSet.toList.sortWith { case (a,b) => a.varName.compareTo(b.varName)<0 }
       for (pVar <- varsList) {
         buf.append(f"${pVar.varName}%5s")
       }

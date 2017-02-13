@@ -15,7 +15,7 @@ class PropositionParser extends RegexParsers {
 
   // grammar
 
-  def propositionalVar: Parser[PropositionVar] = "p[0-9]+".r  ^^ { x => PropositionVar(x.toString) }
+  def propositionalVar: Parser[PropositionVar] = "[prqxy][0-9]+".r  ^^ { x => PropositionVar(x.toString) }
   def parenthesizedVar = "(" ~> propositionalVar <~ ")"
   def operand = propositionalVar | parenthesizedProposition
 
