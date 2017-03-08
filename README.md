@@ -55,12 +55,17 @@ Your program should be able to handle an arbitrary number of propositional varia
 Generating truth-table for a single proposition:
 
 ```
-sbt 'run "( (~(p1)) v (p2) )"'
+sbt 'run-main edu.laney.math55.TruthTable "( (~(p1)) v (p2) )"'
 ```
 
 Generating truth-tables for multiple propositions:
 ```
-sbt 'run "( p1 v (p2 ^ p3)  )"    "( (p1 v p2) ^ (p1 v p3) )"'
+sbt 'run-main edu.laney.math55.TruthTable "( p1 v (p2 ^ p3)  )"    "( (p1 v p2) ^ (p1 v p3) )"'
+```
+
+In general:
+```
+sbt 'run-main edu.laney.math55.TruthTable "proposition 1"   [ "proposition 2" ... ]'
 ```
 
 
