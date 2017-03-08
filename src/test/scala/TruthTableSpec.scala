@@ -1,4 +1,5 @@
-import PropositionParser.PropositionVar
+import edu.laney.math55.grammar.PropositionParser.PropositionVar
+import edu.laney.math55.grammar.{PropositionEvaluator, PropositionParser, PropositionUtils}
 import org.scalatest.prop.TableDrivenPropertyChecks
 import org.scalatest.{Matchers, PropSpec}
 

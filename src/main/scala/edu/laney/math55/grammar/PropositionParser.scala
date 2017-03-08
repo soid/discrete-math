@@ -1,4 +1,6 @@
-import PropositionParser._
+package edu.laney.math55.grammar
+
+import edu.laney.math55.grammar.PropositionParser.{OperatorAnd, OperatorBiImplication, OperatorImplication, OperatorNot, OperatorOr, PropositionVar, _}
 
 import scala.util.parsing.combinator.RegexParsers
 

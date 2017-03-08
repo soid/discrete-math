@@ -1,4 +1,6 @@
-import PropositionParser._
+package edu.laney.math55
+
+import edu.laney.math55.grammar.{PropositionEvaluator, PropositionParser, PropositionUtils}
 
 /**
   * Truth Table program entry point.

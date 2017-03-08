@@ -1,4 +1,6 @@
-import PropositionParser._
+package edu.laney.math55.grammar
+
+import edu.laney.math55.grammar.PropositionParser._
 
 /**
   * Evaluation of proposition given known values.
