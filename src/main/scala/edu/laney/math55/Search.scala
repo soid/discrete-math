@@ -20,9 +20,11 @@ object Search {
     if (problem.goalTest(node))
       Some(node)
     else {
-      problem.actions(node.prop).map {
-        a => new SearchNode(a.resultProp, Some(node), Some(a))
-      }.foreach { sn => successors.enqueue(sn) }
+      problem.actions(node.prop).map { a =>
+        new SearchNode(a.resultProp, Some(node), Some(a))
+      }.foreach { sn =>
+        successors.enqueue(sn)
+      }
 
       if (successors.nonEmpty)
         RBSF(problem, successors.dequeue(), f_limit, successors)
@@ -59,6 +61,47 @@ class Problem(val p1: Proposition, val p2: Proposition) {
     prop match {
       case OperatorAnd(OperatorAnd(a, b), c) =>
         transformations += new Action("Associative Law", ppc( OperatorAnd(a, OperatorAnd(b, c)) ))
+      case _ =>
+    }
+    prop match {
+      case OperatorOr(a, OperatorAnd(b, c)) =>
+        transformations += new Action("Distributive Law", ppc( OperatorAnd(OperatorOr(a, b), OperatorOr(a, c)) ))
+      case _ =>
+    }
+    prop match {
+      case OperatorAnd(a, OperatorOr(b, c)) =>
+        transformations += new Action("Distributive Law", ppc( OperatorOr(OperatorAnd(a, b), OperatorAnd(a, c)) ))
+      case _ =>
+    }
+    prop match {
+      case OperatorOr(a, OperatorAnd(b, c)) if a==b =>
+        transformations += new Action("Absorption Law", ppc( a ))
+      case _ =>
+    }
+    prop match {
+      case OperatorAnd(a, OperatorOr(b, c)) if a==b =>
+        transformations += new Action("Absorption Law", ppc( a ))
+      case _ =>
+    }
+    prop match {
+      case OperatorNot(OperatorAnd(a, b)) =>
+        transformations += new Action("De Morgan’s Law", ppc( OperatorOr(OperatorNot(a), OperatorNot(b)) ))
+      case _ =>
+    }
+    prop match {
+      case OperatorNot(OperatorOr(a, b)) =>
+        transformations += new Action("De Morgan’s Law", ppc( OperatorAnd(OperatorNot(a), OperatorNot(b)) ))
+      case _ =>
+    }
+    prop match {
+      case OperatorImplication(a, b) =>
+        transformations += new Action("Definition of Conditional", ppc( OperatorOr(OperatorNot(a), b) ))
+      case _ =>
+    }
+    prop match {
+      case OperatorBiImplication(a, b) =>
+        transformations += new Action("Definition of Bi-conditional",
+          ppc( OperatorAnd(OperatorImplication(a,b), OperatorImplication(b,a)) ))
       case _ =>
     }
     prop match {

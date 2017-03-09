@@ -17,7 +17,7 @@ class PropositionParser extends RegexParsers {
 
   // grammar
 
-  def propositionalVar: Parser[PropositionVar] = "[prqxy][0-9]+".r  ^^ { x => PropositionVar(x.toString) }
+  def propositionalVar: Parser[PropositionVar] = "[prqxy][0-9]*".r  ^^ { x => PropositionVar(x.toString) }
   def parenthesizedVar = "(" ~> propositionalVar <~ ")"
   def operand = propositionalVar | parenthesizedProposition
 
@@ -51,8 +51,12 @@ object PropositionParser {
   case class OperatorNot(prop: Proposition) extends Proposition {
     override def toString = " ~ " + prop
   }
-  case class OperatorImplication(prop1: Proposition, prop2: Proposition) extends Proposition
-  case class OperatorBiImplication(prop1: Proposition, prop2: Proposition) extends Proposition
+  case class OperatorImplication(prop1: Proposition, prop2: Proposition) extends Proposition {
+    override def toString = "(" + prop1 + " > " + prop2 + ")"
+  }
+  case class OperatorBiImplication(prop1: Proposition, prop2: Proposition) extends Proposition {
+    override def toString = "(" + prop1 + " = " + prop2 + ")"
+  }
 
   /**
     * Parsing helper for parsing strings into syntax tree
