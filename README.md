@@ -82,3 +82,7 @@ sbt compile
 ```
 sbt 'run-main edu.laney.math55.TheoremProver "( (p1 v (p1 v p1)) v (p1 ^ p1) )" "( p1 )"'
 ```
+
+```
+sbt 'run-main edu.laney.math55.TheoremProver "( p = q )" "( (p ^ q) v ((~p) ^ (~q)) )"'
+```
