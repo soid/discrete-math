@@ -1,10 +1,12 @@
-# Truth Table
+# Discrete Math Extra Projects
 
-This is a study project completed by Greg Temchenko for the Discrete Math class at Laney College by Derrick Smith.
+This is a few projects for studying completed by Greg Temchenko for the Discrete Math class at Laney College by Derrick Smith in Spring 2017.
+
+## Truth Table
 
 The project is written in Scala and requires sbt to run (http://www.scala-sbt.org). 
 
-## Description
+### Description
 
 For this project you will write a program that generates a truth table for a given propositional sentence. The
 propositional letters will be p0, p1, p2, … ,pn and the following abbreviations will be used for the propositional
@@ -50,7 +52,7 @@ p0 p1 p2 *
 Your program should be able to handle an arbitrary number of propositional variables. Do not use an “eval” type function , even if your language has one.
 
 
-## Usage
+### Usage
 
 Generating truth-table for a single proposition:
 
