@@ -39,10 +39,18 @@ object PropositionParser {
   // syntax objects
 
   sealed abstract class Proposition
-  case class PropositionVar(varName: String) extends Proposition
-  case class OperatorOr(prop1: Proposition, prop2: Proposition) extends Proposition
-  case class OperatorAnd(prop1: Proposition, prop2: Proposition) extends Proposition
-  case class OperatorNot(prop: Proposition) extends Proposition
+  case class PropositionVar(varName: String) extends Proposition {
+    override def toString = varName
+  }
+  case class OperatorOr(prop1: Proposition, prop2: Proposition) extends Proposition {
+    override def toString = "(" + prop1 + " v " + prop2 + ")"
+  }
+  case class OperatorAnd(prop1: Proposition, prop2: Proposition) extends Proposition {
+    override def toString = "(" + prop1 + " ^ " + prop2 + ")"
+  }
+  case class OperatorNot(prop: Proposition) extends Proposition {
+    override def toString = " ~ " + prop
+  }
   case class OperatorImplication(prop1: Proposition, prop2: Proposition) extends Proposition
   case class OperatorBiImplication(prop1: Proposition, prop2: Proposition) extends Proposition
 

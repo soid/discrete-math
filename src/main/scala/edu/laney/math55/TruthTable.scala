@@ -19,6 +19,7 @@ object TruthTable {
 
   // helper functions
 
+  // TODO make it lazily evaluated
   def getTruthTableString(expressionStr: String):String = {
     // parse the expression
     val matchedOption = PropositionParser.parse(expressionStr)
