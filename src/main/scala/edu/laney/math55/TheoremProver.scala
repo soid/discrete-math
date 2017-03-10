@@ -1,6 +1,7 @@
 package edu.laney.math55
 
 import edu.laney.math55.grammar.PropositionParser
+import edu.laney.math55.prover.{AStarSearch, BreadthFirstSearch, Problem}
 
 
 /**
@@ -27,11 +28,15 @@ object TheoremProver {
         println()
 
         val problem = new Problem(p1, p2)
-        val solution = Search.recursiveBestFirstSearch(problem)
+//        val solution = new AStarSearch().search(problem)
+        val solution = new BreadthFirstSearch().search(problem)
+
         if (solution.isDefined) {
           println("Proof:")
           println(solution.get.explainSolution())
           println("Q.E.D.")
+          println()
+          println("Iterations taken: " + solution.get.iteration)
         } else
           println("Solution Not Found")
 
