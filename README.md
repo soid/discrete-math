@@ -87,3 +87,16 @@ Problem 1.3.16 in Discrete Mathematics and Its Applications, 7th edition by Kenn
 ```
 sbt 'run-main edu.laney.math55.TheoremProver "( p = q )" "( (p ^ q) v ((~p) ^ (~q)) )"'
 ```
+Problem 1.3.17
+```
+sbt 'run-main edu.laney.math55.TheoremProver "(~ ( p = q ))" "( p = (~q) )"'
+```
+Problem 1.3.18
+```
+sbt 'run-main edu.laney.math55.TheoremProver "( p > q )" "( (~q) > (~p) )"'
+```
+
+For extending the memory heap:
+```
+sbt -J-Xmx8G -J-Xms4G
+```
