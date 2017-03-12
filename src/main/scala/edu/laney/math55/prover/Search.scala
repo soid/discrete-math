@@ -1,5 +1,8 @@
 package edu.laney.math55.prover
 
+import java.text.SimpleDateFormat
+import java.util.Calendar
+
 import edu.laney.math55.grammar.PropositionParser._
 
 import scala.annotation.tailrec
@@ -14,11 +17,11 @@ abstract class DepthFirstSearch {
   def isFrontierEmpty(): Boolean
   def dequeueFrontier(): SearchNode
 
-  def search(problem: Problem): Option[SearchNode] = RBSF(problem, new SearchNode(problem.p1, None, None), 99999)
+  def search(problem: Problem): Option[SearchNode] = RBSF(problem, new SearchNode(problem.p1), 99999)
 
   private def RBSF(problem: Problem, node: SearchNode, f_limit: Int): Option[SearchNode] = {
     def diff(t: (Double,SearchNode)) = t._1
-    val explored = Seq[Proposition]()
+    val explored = Set[Proposition]()
     RBSF(problem, node, f_limit, explored, 0)
   }
 
@@ -26,21 +29,29 @@ abstract class DepthFirstSearch {
   private def RBSF(problem: Problem,
                    node: SearchNode,
                    f_limit: Int,
-                   explored: Seq[Proposition],
+                   explored: Set[Proposition],
                    iteration: Int): Option[SearchNode] = {
     if (problem.goalTest(node)) {
       node.iteration = iteration
       Some(node)
     } else {
       problem.actions(node.prop).map { a =>
-        new SearchNode(a.resultProp, Some(node), Some(a))
+        new SearchNode(a.resultProp, Some(node), Some(a), node.depth +1)
       }.foreach { sn =>
         if (!explored.contains(sn.prop)) enqueueFrontier(problem, sn)
       }
 
       if (!isFrontierEmpty()) {
         val best = dequeueFrontier()
-        RBSF(problem, best, f_limit, explored :+ best.prop, iteration +1)
+
+        // debugging output
+        if (iteration % 10000 == 0) {
+          val format = new SimpleDateFormat("hh:mm:ss.S")
+          val ts = format.format(Calendar.getInstance().getTime)
+          println(ts + " Iteration: " + iteration + " depth: " + node.depth)
+        }
+
+        RBSF(problem, best, f_limit, explored + best.prop, iteration +1)
       } else None
     }
   }
@@ -54,9 +65,7 @@ class AStarSearch extends DepthFirstSearch {
     frontier.enqueue(problem.heuristic(node.prop) -> node)
   }
 
-  def isFrontierEmpty(): Boolean = {
-    return frontier.isEmpty
-  }
+  def isFrontierEmpty(): Boolean = frontier.isEmpty
 
   def dequeueFrontier(): SearchNode = frontier.dequeue()._2
 
@@ -68,9 +77,7 @@ class BreadthFirstSearch extends DepthFirstSearch {
 
   def enqueueFrontier(problem:Problem, node:SearchNode): Unit = frontier.enqueue(node)
 
-  def isFrontierEmpty(): Boolean = {
-    return frontier.isEmpty
-  }
+  def isFrontierEmpty(): Boolean = frontier.isEmpty
 
   def dequeueFrontier(): SearchNode = frontier.dequeue()
 }
