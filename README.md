@@ -83,7 +83,7 @@ sbt compile
 sbt 'run-main edu.laney.math55.TheoremProver "( (p1 v (p1 v p1)) v (p1 ^ p1) )" "( p1 )"'
 ```
 
-Problem 1.3.16 in Discrete Mathematics and Its Applications, 7th edition by Kenneth H. Rosen
+Problem 1.3.16 in *Discrete Mathematics and Its Applications*, 7th edition by Kenneth H. Rosen
 ```
 sbt 'run-main edu.laney.math55.TheoremProver "( p = q )" "( (p ^ q) v ((~p) ^ (~q)) )"'
 ```
