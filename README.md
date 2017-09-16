@@ -1,6 +1,6 @@
 # Discrete Math Extra Projects
 
-This is a few projects for studying completed by Greg Temchenko for the Discrete Math class at Laney College by Derrick Smith in Spring 2017.
+These are a few projects for studying completed by Greg Temchenko for the Discrete Math class at Laney College by Derrick Smith in Spring 2017.
 
 The projects are written in Scala and require the sbt build system to run (http://www.scala-sbt.org). 
 
